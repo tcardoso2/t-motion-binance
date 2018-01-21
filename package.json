@@ -1,0 +1,26 @@
+{
+  "name": "t-motion-binance",
+  "version": "0.0.1",
+  "description": "A binance API wrapper, to detect movements in currencies",
+  "main": "main.js",
+  "readmeFilename": "README.md",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tcardoso2/t-motion-binance.git"
+  },
+  "author": "Tiago Cardoso <tcardoso@gmail.com>",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/tcardoso2/t-motion-binance/issues"
+  },
+  "homepage": "https://github.com/tcardoso2/t-motion-binance#readme",
+  "dependencies": {
+    "node-binance-api": "^0.3.9"
+  },
+  "devDependencies": {
+    "mocha": "^4.1.0"
+  }
+}
