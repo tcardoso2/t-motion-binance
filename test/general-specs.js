@@ -15,10 +15,19 @@ let should = chai.should();
 let fs = require('fs');
 let ent = require('../Entities.js');
 let main = require('../main.js');
+let motion = main._;
 
 //Chai will use promises for async events
 chai.use(chaiAsPromised);
+//Chai will use promises for async events
+chai.use(chaiHttp);
 
+function helperReset(){
+  motion.Reset();
+  delete require.cache[require.resolve('../main')];
+  main = require('../main');
+  motion = main._;
+}
 before(function(done) {
   done();
 });
@@ -29,9 +38,41 @@ after(function(done) {
   done();
 });
 
+describe("When an API environment is created, ", function() {
+  it('Should inherit the Environment class', function () {
+    let e = new ent.APIEnvironment(2);
+    (e instanceof t.Entities.Environment).should.equal(true);
+  });
+
+  it('Should take the API key and API secret as parameters', function () {
+    let e = new ent.APIEnvironment(4);
+    e.countNodes().should.equal(4);
+  });
+
+  it('if no parameter is passed, results in an error', function () {
+    try{
+      let e = new ent.APIEnvironment();
+    } catch(e){
+      e.message.should.equal("ERROR: Number of nodes is mandatory and cannot equal 0.");
+      return;
+    }
+    should.fail();
+  });
+});
+
 describe("When a detector is added, ", function() {
   it('should store a list of current investments', function () {
     //Prepare
+      helperReset();
+      let _config = new main._.Config("/test/config_binance_test1.js");
+      main._.StartWithConfig(_config, (e,d,n,f) =>{
+        n[0].on('pushedNotification', function(message, text, data){
+          console.log(data.newState);
+          data.newState.row.should.be.gt(5);
+
+          done();
+        });
+      });
   });
   it('should get a list of how much each coin has valued/devalued since purchase', function () {
     //Prepare
