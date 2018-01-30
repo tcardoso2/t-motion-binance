@@ -15,6 +15,7 @@ let should = chai.should();
 let fs = require('fs');
 let ent = require('../Entities.js');
 let main = require('../main.js');
+let chaiHttp = require('chai-http');
 let motion = main._;
 
 //Chai will use promises for async events
