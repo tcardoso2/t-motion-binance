@@ -42,41 +42,41 @@ after(function(done) {
 describe("When a new AccountEnvironment is created, ", function() {
   it('Should inherit the Environment class', function () {
     let e = new ent.AccountEnvironment(200.34);
-    (e instanceof t.Entities.Environment).should.equal(true);
+    (e instanceof motion.Entities.Environment).should.equal(true);
   });
 
   it('Can take the account balance (in BTC) as first parameter (for test purposes)', function () {
     let e = new ent.AccountEnvironment(200.34);
-    (e instanceof t.Entities.Environment).should.equal(true);
+    e.getCurrentState().should.equal(200.34);
   });
 
   it('Should store the account original balance', function () {
     let e = new ent.AccountEnvironment(200.34);
-    (e instanceof t.Entities.Environment).should.equal(true);
+    (e instanceof motion.Entities.Environment).should.equal(true);
   });
 
   it('Should be possible to add PositionDetectors to the AccountEnvironment', function () {
     let e = new ent.AccountEnvironment(200.34);
-    (e instanceof t.Entities.Environment).should.equal(true);
+    (e instanceof motion.Entities.Environment).should.equal(true);
   });
 
   it('Should be possible to get all open positions and values', function () {
     let e = new ent.AccountEnvironment(200.34);
-    (e instanceof t.Entities.Environment).should.equal(true);
+    (e instanceof motion.Entities.Environment).should.equal(true);
   });
 
   it('Should be able to compute the current account balance', function () {
     let e = new ent.AccountEnvironment(200.34);
-    (e instanceof t.Entities.Environment).should.equal(true);
+    (e instanceof motion.Entities.Environment).should.equal(true);
   });
 
   it('Should be able to compute percentage growth/loss', function () {
     let e = new ent.AccountEnvironment(200.34);
-    (e instanceof t.Entities.Environment).should.equal(true);
+    (e instanceof motion.Entities.Environment).should.equal(true);
   });
 
   it('Should be able to sync with the account balance from an API Proxy (e.g. binance) - Resets the environment', function () {
     let e = new ent.AccountEnvironment(200.34);
-    (e instanceof t.Entities.Environment).should.equal(true);
+    (e instanceof motion.Entities.Environment).should.equal(true);
   });
 });
