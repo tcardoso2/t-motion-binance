@@ -1,6 +1,6 @@
 {
   "name": "t-motion-binance",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A binance API wrapper, to detect movements in currencies",
   "main": "main.js",
   "readmeFilename": "README.md",
@@ -19,7 +19,7 @@
   "homepage": "https://github.com/tcardoso2/t-motion-binance#readme",
   "dependencies": {
     "node-binance-api": "^0.3.9",
-    "t-motion-detector": "^0.5.16"
+    "t-motion-detector": "^0.5.17"
   },
   "devDependencies": {
     "chai": "^4.1.2",

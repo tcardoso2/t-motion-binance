@@ -35,7 +35,7 @@ before(function(done) {
 
 after(function(done) {
   // here you can clear fixtures, etc.
-  main.Reset();
+  motion.Reset();
   done();
 });
 
@@ -71,7 +71,7 @@ describe("When a new AccountEnvironment is created, ", function() {
       environment: e
     });
     try{
-      motion.AddDetector(new ent.MotionDetector());
+      motion.AddDetector(new motion.Entities.MotionDetector());
     }catch(e){
       e.message.should.equal("Detectors can only be of 'PositionDetector' type.");
       return;
@@ -88,7 +88,7 @@ describe("When a new AccountEnvironment is created, ", function() {
     });
     motion.AddDetector(new ent.PositionDetector("Position 1", 100));
     motion.AddDetector(new ent.PositionDetector("Position 2", 200));
-    e.getAllOpenPositions().should.equal([
+    e.getAllOpenPositions().should.be.eql([
     {
       name: "Position 1",
       value: 100,
@@ -103,15 +103,27 @@ describe("When a new AccountEnvironment is created, ", function() {
   });
 
   it('Should be able to compute the current account balance', function () {
+    motion.Reset();
+
     let e = new ent.AccountEnvironment(200.34);
-    (e instanceof motion.Entities.Environment).should.equal(true);
-    should.fail();
+    motion.Start({
+      environment: e,
+    });
+    motion.AddDetector(new ent.PositionDetector("Position 1", 100));
+    motion.AddDetector(new ent.PositionDetector("Position 2", 200));
+    e.calculateBalance().should.equal(300);
   });
 
   it('Should be able to compute percentage growth/loss', function () {
-    let e = new ent.AccountEnvironment(200.34);
-    (e instanceof motion.Entities.Environment).should.equal(true);
-    should.fail();
+    motion.Reset();
+
+    let e = new ent.AccountEnvironment(100);
+    motion.Start({
+      environment: e,
+    });
+    motion.AddDetector(new ent.PositionDetector("Position 1", 50));
+    motion.AddDetector(new ent.PositionDetector("Position 2", 40));
+    e.calculateGrowthPerc().should.equal(-10);
   });
 
   it('Should be able to sync with the account balance from an API Proxy (e.g. binance) - Resets the environment', function () {

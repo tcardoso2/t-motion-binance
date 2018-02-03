@@ -2,10 +2,32 @@
 
 ### Table of Contents
 
+-   [bindDetector](#binddetector)
 -   [getAllOpenPositions](#getallopenpositions)
+-   [calculateBalance](#calculatebalance)
+-   [calculateGrowthPerc](#calculategrowthperc)
+
+## bindDetector
+
+Called internally when adding Detectors to the Account Environment. It will check if the Detector is
+of type PositionDetector, and will throw an exception if it's not.
+
+**Parameters**
+
+-   `md`  
+-   `notifiers`  
+-   `force`   (optional, default `false`)
 
 ## getAllOpenPositions
 
 Gets all existing open positions, their names, current and original values
 
 Returns **any** an array of dictionaries containing original, current value and position name (currency).
+
+## calculateBalance
+
+Calculates the sum of all the values of all the Positions opened.
+
+## calculateGrowthPerc
+
+Calculates the growth percentage calculating the Account original set value with the @calculateBalance value.
