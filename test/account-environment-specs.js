@@ -52,31 +52,71 @@ describe("When a new AccountEnvironment is created, ", function() {
 
   it('Should store the account original balance', function () {
     let e = new ent.AccountEnvironment(200.34);
-    (e instanceof motion.Entities.Environment).should.equal(true);
+    e.currentBalance = 100;
+    e.getOriginalState().should.equal(200.34);
   });
 
   it('Should be possible to add PositionDetectors to the AccountEnvironment', function () {
     let e = new ent.AccountEnvironment(200.34);
-    (e instanceof motion.Entities.Environment).should.equal(true);
+    motion.Start({
+      environment: e
+    });
+    motion.AddDetector(new ent.PositionDetector());
+    motion.GetMotionDetectors().length.should.equal(1);
+  });
+
+  it('if the detector is not a PositionDetector should return an error', function () {
+    let e = new ent.AccountEnvironment(200.34);
+    motion.Start({
+      environment: e
+    });
+    try{
+      motion.AddDetector(new ent.MotionDetector());
+    }catch(e){
+      e.message.should.equal("Detectors can only be of 'PositionDetector' type.");
+      return;
+    }
+    should.fail();
   });
 
   it('Should be possible to get all open positions and values', function () {
+    motion.Reset();
+
     let e = new ent.AccountEnvironment(200.34);
-    (e instanceof motion.Entities.Environment).should.equal(true);
+    motion.Start({
+      environment: e,
+    });
+    motion.AddDetector(new ent.PositionDetector("Position 1", 100));
+    motion.AddDetector(new ent.PositionDetector("Position 2", 200));
+    e.getAllOpenPositions().should.equal([
+    {
+      name: "Position 1",
+      value: 100,
+      originalValue: 100
+    },
+    {
+      name: "Position 2",
+      value: 200,
+      originalValue: 200
+    }]);
+    //TODO: originalIntentity needs to exist for t-motion-detector core module
   });
 
   it('Should be able to compute the current account balance', function () {
     let e = new ent.AccountEnvironment(200.34);
     (e instanceof motion.Entities.Environment).should.equal(true);
+    should.fail();
   });
 
   it('Should be able to compute percentage growth/loss', function () {
     let e = new ent.AccountEnvironment(200.34);
     (e instanceof motion.Entities.Environment).should.equal(true);
+    should.fail();
   });
 
   it('Should be able to sync with the account balance from an API Proxy (e.g. binance) - Resets the environment', function () {
     let e = new ent.AccountEnvironment(200.34);
     (e instanceof motion.Entities.Environment).should.equal(true);
+    should.fail();
   });
 });
