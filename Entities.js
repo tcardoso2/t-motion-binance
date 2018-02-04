@@ -1,8 +1,12 @@
-let m = require('t-motion-detector');
+let m_cli = require('t-motion-detector-cli');
+let m = m_cli._;
 let ent = m.Entities;
 var log = m.Log;
 let ext = m.Extensions;
 
+/*
+ * Manages an account environment with investments 
+ */
 class AccountEnvironment extends ent.Environment{
   
   constructor(amount){
@@ -55,6 +59,9 @@ class AccountEnvironment extends ent.Environment{
   }
 }
 
+/*
+ * Manages a specific position / investment maintaining current balance
+ */
 class PositionDetector extends ent.MotionDetector{
 
   constructor(name, value){
@@ -62,5 +69,21 @@ class PositionDetector extends ent.MotionDetector{
   }
 }
 
+/*
+ * Creates an environment wich is able to communicate directly with the Broker API
+ */
+class TradingProxyEnvironment extends ent.GetExtensions().APIEnvironment{
+
+  constructor(key, secret, endpoint, isMockMode){
+    super(key, secret, endpoint, isMockMode);
+  }
+}
+
+//Extending Entities Factory
+const classes = { AccountEnvironment, PositionDetector, TradingProxyEnvironment };
+
+new ent.EntitiesFactory().extend(classes);
+
 exports.AccountEnvironment = AccountEnvironment;
 exports.PositionDetector = PositionDetector;
+exports.TradingProxyEnvironment = TradingProxyEnvironment;

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
-let md = require('t-motion-detector');
-let _ = md;
+let mdc = require('t-motion-detector-cli');
+let _ = mdc._;
+
 //Plugin exports
 function PreAddPlugin()
 {
@@ -17,7 +18,19 @@ function PostRemovePlugin()
 {
 }
 
-exports._ = _
+/**
+ * Called when t-motion-detector is reset. Called when Reset is called.
+ * Emits also a "reset" event which can be used for performing additional tasks
+ * @return {boolean} True the plugin was successfully added.
+ */
+function Reset(){
+  log.info("Calling plugin Reset method...");
+  //Do some reset stuff here
+  this.emit("reset");
+}
+
+exports._ = _;
+exports._cli = mdc;
 exports.PreAddPlugin = PreAddPlugin;
 exports.PostAddPlugin = PostAddPlugin;
 exports.PreRemovePlugin = PreRemovePlugin;

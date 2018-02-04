@@ -39,29 +39,10 @@ after(function(done) {
   done();
 });
 
-describe("When an API environment is created, ", function() {
-  it('Should inherit the Environment class', function () {
-    let e = new ent.APIEnvironment(2);
-    (e instanceof t.Entities.Environment).should.equal(true);
-  });
-
-  it('Should take the API key and API secret as parameters', function () {
-    let e = new ent.APIEnvironment(4);
-    e.countNodes().should.equal(4);
-  });
-
-  it('if no parameter is passed, results in an error', function () {
-    try{
-      let e = new ent.APIEnvironment();
-    } catch(e){
-      e.message.should.equal("ERROR: Number of nodes is mandatory and cannot equal 0.");
-      return;
-    }
-    should.fail();
-  });
-});
-
-describe("When a detector is added, ", function() {
+/*TODO: Redo this later when I have a more mature set of unit tests, focus first on AccountEnvironment,
+PositionDetector, TradeProxy and PositionProxyDetectors,
+This one is more on the detecting the strenght of signals side*/
+describe("When a TraderDetector is added, ", function() {
   it('should store a list of current investments', function () {
     //Prepare
       helperReset();
@@ -77,44 +58,77 @@ describe("When a detector is added, ", function() {
   });
   it('should get a list of how much each coin has valued/devalued since purchase', function () {
     //Prepare
+    should.fail();
   });
   it('Should start a worker via socket to compare a currency pair', function () {
     //Prepare
+    should.fail();
   });
   it('Should trigger a purchase when is good to buy', function () {
     //Prepare
+    should.fail();
   });
   it('Should trigger a sale when is good to sell', function () {
     //Prepare
+    should.fail();
   });
   it('Should set the amount to buy/sell', function () {
     //Prepare
+    should.fail();
   });
 });
 
 describe("When a currency pair is set, ", function() {
   it('should be able to store the values at the start', function () {
     //Prepare
+    should.fail();
   });
   it('should track the change every X amount of time', function () {
     //Prepare
+    should.fail();
   });
   it('should trigger an event when value changes more than % percent', function () {
     //Prepare
+    should.fail();
   });
   it('should be able to set a stop-limit', function () {
     //Prepare
+    should.fail();
   });
   it('should trigger an event when value reaches a stop-limit', function () {
     //Prepare
+    should.fail();
   });
   it('should be able to detect a crash', function () {
     //Prepare
+    should.fail();
   });
   it('should be able to pass the currency to USDT to prevent losses', function () {
     //Prepare
+    should.fail();
   });
   it('should be able to reinstate back values by re-buying positions when market is ok', function () {
     //Prepare
+    should.fail();
+  });
+});
+
+describe("When using a t-motion-detector-cli to visualize current investments, ", function() {
+  it('Should be able to show a view of all investments', function () {
+    let e = new ent.AccountEnvironment(200.34);
+    (e instanceof motion.Entities.Environment).should.equal(true);
+    should.fail();
+  });
+
+  it('Should be able to show a view a detailed investment', function () {
+    let e = new ent.AccountEnvironment(200.34);
+    (e instanceof motion.Entities.Environment).should.equal(true);
+    should.fail();
+  });
+
+  it('Should be able to show the chart of a detailed investment', function () {
+    let e = new ent.AccountEnvironment(200.34);
+    (e instanceof motion.Entities.Environment).should.equal(true);
+    should.fail();
   });
 });

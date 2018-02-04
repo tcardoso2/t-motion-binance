@@ -42,6 +42,7 @@ after(function(done) {
 describe("When a new AccountEnvironment is created, ", function() {
   it('Should inherit the Environment class', function () {
     let e = new ent.AccountEnvironment(200.34);
+    console.log("$$$$$$", motion.Entities.Environment);
     (e instanceof motion.Entities.Environment).should.equal(true);
   });
 
@@ -126,7 +127,7 @@ describe("When a new AccountEnvironment is created, ", function() {
     e.calculateGrowthPerc().should.equal(-10);
   });
 
-  it('Should be able to sync with the account balance from an API Proxy (e.g. binance) - Resets the environment', function () {
+  it('Should be able to sync with the account balance from an API Proxy (e.g. TradingProxyEnvironment) - Resets the environment', function () {
     let e = new ent.AccountEnvironment(200.34);
     (e instanceof motion.Entities.Environment).should.equal(true);
     should.fail();
