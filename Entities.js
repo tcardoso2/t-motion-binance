@@ -3,6 +3,7 @@ let m = m_cli._;
 let ent = m.Entities;
 var log = m.Log;
 let ext = m.Extensions;
+const binance = require('binance');
 
 /*
  * Manages an account environment with investments 
@@ -70,20 +71,51 @@ class PositionDetector extends ent.MotionDetector{
 }
 
 /*
- * Creates an environment wich is able to communicate directly with the Broker API
+ * Detects changes directly from the TradingProxyEnvironment
+ */
+class TradeProxyDetector extends ent.MotionDetector{
+
+  constructor(currencyPair){
+    super(currencyPair);
+  }
+}
+
+/*
+ * Creates an environment wich is able to communicate directly with the Binance Broker API using a wrapper
+ * of the binance module
  */
 class TradingProxyEnvironment extends ent.GetExtensions().APIEnvironment{
 
   constructor(key, secret, endpoint, isMockMode){
     super(key, secret, endpoint, isMockMode);
+    this.apiWrapper = new binance.BinanceWS(true); // Argument specifies whether the responses should be beautified, defaults to true
+  }
+  
+  //Expects a MotionDetector entity passed as arg
+  bindDetector(md, notifiers, force = false){
+    super.bindDetector(md, notifiers, force);
+    //Uses the name as the currency pair
+    let _this = this;
+    this.apiWrapper.onDepthUpdate(md.name, (data) => {
+      _this.addChange(data);
+    });
+   
+    this.apiWrapper.onAggTrade(md.name, (data) => {
+      _this.addChange(data);
+    });
+   
+    this.apiWrapper.onKline(md.name, (data) => {
+      _this.addChange(data);
+    });
   }
 }
 
 //Extending Entities Factory
-const classes = { AccountEnvironment, PositionDetector, TradingProxyEnvironment };
+const classes = { AccountEnvironment, PositionDetector, TradingProxyEnvironment, TradeProxyDetector};
 
 new ent.EntitiesFactory().extend(classes);
 
 exports.AccountEnvironment = AccountEnvironment;
 exports.PositionDetector = PositionDetector;
 exports.TradingProxyEnvironment = TradingProxyEnvironment;
+exports.TradeProxyDetector = TradeProxyDetector;

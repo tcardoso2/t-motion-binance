@@ -1,6 +1,6 @@
 {
   "name": "t-motion-binance",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A binance API wrapper, to detect movements in currencies",
   "main": "main.js",
   "readmeFilename": "README.md",

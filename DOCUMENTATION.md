@@ -6,6 +6,7 @@
 -   [getAllOpenPositions](#getallopenpositions)
 -   [calculateBalance](#calculatebalance)
 -   [calculateGrowthPerc](#calculategrowthperc)
+-   [Reset](#reset)
 
 ## bindDetector
 
@@ -31,3 +32,10 @@ Calculates the sum of all the values of all the Positions opened.
 ## calculateGrowthPerc
 
 Calculates the growth percentage calculating the Account original set value with the @calculateBalance value.
+
+## Reset
+
+Called when t-motion-detector is reset. Called when Reset is called.
+Emits also a "reset" event which can be used for performing additional tasks
+
+Returns **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** True the plugin was successfully added.
