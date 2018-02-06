@@ -58,5 +58,5 @@ typings/
 .env
 
 # local test files
-local.js
+local*.js
 test*.js

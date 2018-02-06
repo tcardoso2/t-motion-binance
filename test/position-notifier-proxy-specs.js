@@ -67,9 +67,40 @@ describe("When a TradingProxyEnvironment is created, ", function() {
       });
     });
   });
+
+  it('Should create automatically positions proxies based on the actual positions held', function (done) {
+    this.timeout(8000);
+    helperReset();
+    let _config = new main._.Config("local_test1.js");
+    main._.StartWithConfig(_config, (e,d,n,f) =>{
+      e.syncBalances((error, data) => {
+        (error == null).should.equal(true);
+        data.canTrade.should.equal(true);
+        data.canWithdraw.should.equal(true);
+        data.canDeposit.should.equal(true);
+        data.balances[0].asset.should.equal("BTC");
+        //Should at least be a real account with one existing position
+        (d[0] == undefined).should.not.equal(true);
+        (d[0] instanceof ent.TradeProxyDetector).should.equal(true);
+        d[0].on("hasDetected", function(currentIntensity, newState, source, detector){
+          if(currentIntensity)
+          {
+            source.should.eql(e);
+            detector.should.eql(d[0]);
+            newState.symbol.should.equal("BTCUSDT");
+            console.log(newState);
+            if(newState.eventType === "aggTrade")
+            {
+              done();
+            }
+          }
+        });
+      });
+    });
+  });
 });
 
-describe("When a new PositionNotifierProxy is Opened, ", function() {
+describe("When a new PositionProxyNotifier is Opened, ", function() {
   it('Should listen to a PositionDetector', function () {
     let e = new ent.PositionDetector(200.34);
     (e instanceof t.Entities.Detector).should.equal(true);

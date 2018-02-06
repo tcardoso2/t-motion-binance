@@ -108,6 +108,34 @@ class TradingProxyEnvironment extends ent.GetExtensions().APIEnvironment{
       _this.addChange(data);
     });
   }
+  /*
+   * Gets the detectors from the Trading environment and adds proxies to it.
+   * @param {Function} a callback function.
+   */
+  syncBalances(callback){
+    let _this = this;
+    this.binanceRest = new binance.BinanceRest({
+      key: _this._key,
+      secret: _this._secret,
+      timeout: 15000, // Optional, defaults to 15000, is the request time out in milliseconds
+      recvWindow: 10000, // Optional, defaults to 5000, increase if you're getting timestamp errors
+      disableBeautification: false
+    });
+    return this.binanceRest.account((error, data)=>{
+      if(!error){
+        let value, asset;
+        for(let i in data.balances){
+          value = parseFloat(data.balances[i].free);
+          asset = data.balances[i].asset;
+          if(value > 0){
+            log.info(`Creating detector for ${asset} with value: ${value}`);
+            m.AddDetector(new TradeProxyDetector(asset, value));
+          }
+        }
+      }
+      callback(error, data);
+    });
+  }
 }
 
 //Extending Entities Factory
