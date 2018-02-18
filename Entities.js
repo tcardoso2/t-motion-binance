@@ -20,6 +20,7 @@ class AccountEnvironment extends ent.Environment{
  * @public
  */
   bindDetector(md, notifiers, force = false){
+    console.log(`Binding detector ${md.constructor.name}...`);
     if (!(md instanceof PositionDetector)) throw new Error("Detectors can only be of 'PositionDetector' type.");
     return super.bindDetector(md, notifiers, force);
   }
@@ -89,13 +90,19 @@ class TradingProxyEnvironment extends ent.GetExtensions().APIEnvironment{
   constructor(key, secret, endpoint, isMockMode){
     super(key, secret, endpoint, isMockMode);
     this.apiWrapper = new binance.BinanceWS(true); // Argument specifies whether the responses should be beautified, defaults to true
+    log.info("Created connection to Binance API");
   }
   
   //Expects a MotionDetector entity passed as arg
   bindDetector(md, notifiers, force = false){
+    log.info(`Binding detector ${md.constructor.name} with name ${md.name}...`);
+    if(!(md instanceof TradeProxyDetector)) throw new Error("Motion Detector must be of type TradeProxyDetector");
+
     super.bindDetector(md, notifiers, force);
     //Uses the name as the currency pair
     let _this = this;
+    //Parity is with USDT for BTC but BTC for all other currencies
+    
     this.apiWrapper.onDepthUpdate(md.name, (data) => {
       _this.addChange(data);
     });
@@ -107,7 +114,9 @@ class TradingProxyEnvironment extends ent.GetExtensions().APIEnvironment{
     this.apiWrapper.onKline(md.name, (data) => {
       _this.addChange(data);
     });
+    log.info(`Finished binding detector ${md.constructor.name}.`);
   }
+
   /*
    * Gets the detectors from the Trading environment and adds proxies to it.
    * @param {Function} a callback function.
@@ -129,10 +138,13 @@ class TradingProxyEnvironment extends ent.GetExtensions().APIEnvironment{
           asset = data.balances[i].asset;
           if(value > 0){
             log.info(`Creating detector for ${asset} with value: ${value}`);
+            asset += asset == "BTC" ? "USDT" : "BTC";
             m.AddDetector(new TradeProxyDetector(asset, value));
           }
         }
       }
+      //Restarts apiWrapper, seems to be necessary after a Rest call
+      this.apiWrapper = new binance.BinanceWS(true); 
       callback(error, data);
     });
   }

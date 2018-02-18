@@ -1,12 +1,12 @@
 profiles = {
   default: {
   	TradingProxyEnvironment: {
-      key: "odjSuM6tt989fPrBGlVwQMB5OMOkSNtcQxoSnDbgjkxaIZyXzwVtcyAKzan4JMFs",
-      secret: "5ZY8yi70lXMX1o5CHKPx3FfxmsfJ67U6ySauaZflA4njJuSa7VmEELxzRtCPtNBy",
+      key: "key",
+      secret: "secret",
       endpoint: "endpoint1",
       isMockMode: true
     },
-    MotionDetector: {
+    TradeProxyDetector: {
     }
   }
 }
