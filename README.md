@@ -1,6 +1,7 @@
 # t-motion-binance
 A binance API wrapper, to detect movements in currencies  
 
+* v0.0.10: Implemented detectors, these only propagate the event for their own currency pair matching their name;  
 * v0.0.9: Continuing on implementation of syncronization (WIP);  
 * v0.0.8: Working In Progress on synchronization between TradingProxyEnvironment and actual Binance API;  
 * v0.0.7: Created first version of TradeProxyDetector, a wrapper for binance module;  

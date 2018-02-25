@@ -79,6 +79,13 @@ class TradeProxyDetector extends ent.MotionDetector{
   constructor(currencyPair){
     super(currencyPair);
   }
+
+  send(newState, source){
+    //Only sends if the signal was detected for a currency pair with the same name as self
+    if (newState.symbol && newState.symbol === this.name){
+      super.send(newState, source);
+    }
+  }
 }
 
 /*
@@ -138,7 +145,9 @@ class TradingProxyEnvironment extends ent.GetExtensions().APIEnvironment{
           asset = data.balances[i].asset;
           if(value > 0){
             log.info(`Creating detector for ${asset} with value: ${value}`);
-            asset += asset == "BTC" ? "USDT" : "BTC";
+            if(asset != "USDT"){
+              asset += asset == "BTC" ? "USDT" : "BTC";
+            }
             m.AddDetector(new TradeProxyDetector(asset, value));
           }
         }

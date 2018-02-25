@@ -16,6 +16,7 @@ let fs = require('fs');
 let ent = require('../Entities.js');
 let main = require('../main.js');
 let chaiHttp = require('chai-http');
+let _ = require('underscore');
 let motion = main._;
 
 //Chai will use promises for async events
@@ -161,6 +162,17 @@ describe("When a TradingProxyEnvironment is created, ", function() {
   it('Should create automatically positions proxies based on the actual positions held', function (done) {
     this.timeout(8000);
     helperReset();
+
+    let allTrue = (obj) =>
+    {
+      for(var o in obj)
+      {
+          if(o == "USDT") continue;
+          if(!obj[o]) return false;
+      }
+      return true;
+    }
+
     let _config = new main._.Config("local_test1.js");
     main._.StartWithConfig(_config, (e,d,n,f) =>{
       e.syncBalances((error, data) => {
@@ -175,21 +187,27 @@ describe("When a TradingProxyEnvironment is created, ", function() {
         d.length.should.be.gt(0);
         (d[1] == undefined).should.not.equal(true);
         (d[1] instanceof ent.TradeProxyDetector).should.equal(true);
-        console.log(`  > Adding 'hasDetected' listener to a dinamically generated detector: ${d[1].name}... waiting for response`)
-        d[1].on("hasDetected", function(currentIntensity, newState, source, detector){
-          console.log("  > Detected movement!");
-          if(currentIntensity)
-          {
-            source.should.eql(e);
-            detector.should.eql(d[0]);
-            newState.symbol.should.equal("BTCUSDT");
-            console.log(newState);
-            if(newState.eventType === "aggTrade")
+        console.log(`  > Number of detectors found: ${d.length}`);
+        let __done = false;
+        let result = {};
+        for(let ixd = 0; ixd < d.length; ixd++){
+          console.log(`  > Adding 'hasDetected' listener to a dinamically generated detector ${ixd}: ${d[ixd].name}... waiting for response`)
+          result[d[ixd].name] = false;
+          d[ixd].on("hasDetected", function(currentIntensity, newState, source, detector){
+            if(currentIntensity)
             {
-              done();
+              newState.symbol.should.equal(d[ixd].name);
+              //console.log(`    >> Detected movement, detector: ${detector.name}.${newState.eventType}!`);
+              result[d[ixd].name] = true;
+              //check if all detectors detected movement except USDT
+              if(!__done && allTrue(result)){
+                __done = true;
+                console.log("      >>> testing:", result);
+                done();
+              }
             }
-          }
-        });
+          });
+        }
       })
     });
   });
@@ -197,6 +215,7 @@ describe("When a TradingProxyEnvironment is created, ", function() {
 
 describe("When a new PositionProxyNotifier is Opened, ", function() {
   it('Should listen to a PositionDetector', function () {
+    helperReset();
     let e = new ent.PositionDetector(200.34);
     (e instanceof t.Entities.Detector).should.equal(true);
   });
