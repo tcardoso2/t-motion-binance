@@ -7,6 +7,7 @@ profiles = {
       isMockMode: true
     },
     TradeProxyDetector: {
+      currencyPair: "BTCUSDT"
     }
   }
 }
