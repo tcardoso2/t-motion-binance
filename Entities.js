@@ -1,3 +1,5 @@
+"use strict"
+
 let m_cli = require('t-motion-detector-cli');
 let m = m_cli._;
 let ent = m.Entities;
@@ -59,6 +61,32 @@ class AccountEnvironment extends ent.Environment{
   calculateGrowthPerc(){
     return 100*this.calculateBalance() / this.getOriginalState() - this.getOriginalState();
   }
+  /*
+   * Syncs with the TradeProxyEnvironment, by creating PositionDetectors from the real Trading 
+   * environment based on the TradeProxyDetectors. Resets the environment before sync. And gets
+   * updates after the sync (meaning new positions should be created if crypto is bought / sold)
+   * @param {Object} proxy is a TradeProxyEnvironment to sync with.
+   * @param {Function} a callback function.
+   */
+   //TODO: Use promises for returning data
+  syncBalances(proxy, callback){
+    log.info(`Syncing balances with proxy Environment ${proxy.name}...`);
+    
+    proxy.syncBalances((error, data) => {
+      if (error){
+        callback(error);
+        return;
+      }
+      for(let d = 0; d<proxy.motionDetectors.length; d++){
+        log.info(`Detected proxy motion detector ${proxy.motionDetectors[d].name} with value ${proxy.motionDetectors[d].getOriginalIntensity()}`);
+        this.bindDetector(new PositionDetector(
+          proxy.motionDetectors[d].name,
+          proxy.motionDetectors[d].getOriginalIntensity()
+          ));
+      }
+      callback();
+    });
+  }
 }
 
 /*
@@ -76,8 +104,8 @@ class PositionDetector extends ent.MotionDetector{
  */
 class TradeProxyDetector extends ent.MotionDetector{
 
-  constructor(currencyPair){
-    super(currencyPair);
+  constructor(currencyPair, value){
+    super(currencyPair, value);
   }
 
   send(newState, source){
@@ -125,10 +153,13 @@ class TradingProxyEnvironment extends ent.GetExtensions().APIEnvironment{
   }
 
   /*
-   * Gets the detectors from the Trading environment and adds proxies to it.
+   * Creates TradeProxyDetectors from the real Trading environment based on the positions held, and listens
+   * for currency update events via the socket for each currency pair held.
    * @param {Function} a callback function.
    */
   syncBalances(callback){
+    log.info(`Syncing balances with real environment...`);
+
     let _this = this;
     this.binanceRest = new binance.BinanceRest({
       key: _this._key,
